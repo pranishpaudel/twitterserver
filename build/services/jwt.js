@@ -11,5 +11,9 @@ class JWTService {
         const token = JWT.sign(payload, JWT_SECRET);
         return token;
     }
+    static decodeToken(token) {
+        console.log(JWT.verify(token, JWT_SECRET));
+        return JWT.verify(token, JWT_SECRET);
+    }
 }
 export default JWTService;

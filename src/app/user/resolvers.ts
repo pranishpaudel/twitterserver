@@ -1,6 +1,7 @@
 import axios from "axios";
 import { prismaClient } from "../../clients/db/index.js";
 import JWTService from "../../services/jwt.js";
+import { GraphqlContext } from "../../interfaces.js";
 
 interface AxiosGoogleType {
   iss: string;
@@ -20,6 +21,7 @@ interface AxiosGoogleType {
   kid: string;
   typ: string;
 }
+//prime and composit
 const queries = {
   verifyGoogleToken: async (parent: any, { token }: { token: string }) => {
     const googleoauthURL = new URL("https://oauth2.googleapis.com/tokeninfo");
@@ -42,9 +44,13 @@ const queries = {
       });
     }
 
-    const accessToken = await JWTService.generateTokenForUser(user.id);
+    const accessToken = await JWTService.generateTokenForUser(user!.id);
 
     return accessToken;
+  },
+  getCurrentUser: async (parent: any, args: any, ctx: GraphqlContext) => {
+    console.log(ctx);
+    return ctx.user;
   },
 };
 

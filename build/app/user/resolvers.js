@@ -1,6 +1,7 @@
 import axios from "axios";
 import { prismaClient } from "../../clients/db/index.js";
 import JWTService from "../../services/jwt.js";
+//prime and composit
 const queries = {
     verifyGoogleToken: async (parent, { token }) => {
         const googleoauthURL = new URL("https://oauth2.googleapis.com/tokeninfo");
@@ -22,6 +23,10 @@ const queries = {
         }
         const accessToken = await JWTService.generateTokenForUser(user.id);
         return accessToken;
+    },
+    getCurrentUser: async (parent, args, ctx) => {
+        console.log(ctx);
+        return ctx.user;
     },
 };
 export const resolvers = { queries };
