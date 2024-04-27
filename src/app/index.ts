@@ -3,6 +3,7 @@ import { ApolloServer } from "@apollo/server";
 import express from "express";
 import bodyParser from "body-parser";
 import { User } from "./user/index.js";
+import { Tweet } from "./tweet/index";
 import { prismaClient } from "../clients/db/index.js";
 import cors from "cors";
 import { GraphqlContext } from "../interfaces.js";
@@ -18,10 +19,16 @@ export async function initServer() {
         type Query {
           ${User.queries}
         }
+        type Mutation{
+          ${Tweet.mutations}
+        }
     `,
     resolvers: {
       Query: {
         ...User.resolvers.queries,
+      },
+      Mutation: {
+        ...Tweet.resolvers.mutations,
       },
     },
   });
