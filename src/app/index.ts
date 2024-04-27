@@ -27,6 +27,17 @@ export async function initServer() {
   });
 
   await server.start();
-  app.use("/graphql", expressMiddleware(server));
+  app.use(
+    "/graphql",
+    expressMiddleware(server, {
+      context: async ({ req, res }) => {
+        const extractedJWT = req.headers.authorization.split("Bearer ")[1];
+        return {
+          user: extractedJWT ? JWTService.decodeToken(extractedJWT) : undefined,
+        };
+      },
+    })
+  );
+
   return app;
 }

@@ -24,6 +24,7 @@ interface AxiosGoogleType {
 //prime and composit
 const queries = {
   verifyGoogleToken: async (parent: any, { token }: { token: string }) => {
+    console.log(token);
     const googleoauthURL = new URL("https://oauth2.googleapis.com/tokeninfo");
     googleoauthURL.searchParams.set("id_token", token);
     const data = await axios.get<AxiosGoogleType>(googleoauthURL.toString());
@@ -49,8 +50,13 @@ const queries = {
     return accessToken;
   },
   getCurrentUser: async (parent: any, args: any, ctx: GraphqlContext) => {
-    console.log(ctx);
-    return ctx.user;
+    const id = ctx.user?.id;
+    const user = await prismaClient.user.findUnique({
+      where: {
+        id,
+      },
+    });
+    return user;
   },
 };
 
