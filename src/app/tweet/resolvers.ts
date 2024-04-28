@@ -1,5 +1,5 @@
-import { prismaClient } from "../../clients/db";
-import { GraphqlContext } from "../../interfaces";
+import { prismaClient } from "../../clients/db/index.js";
+import { GraphqlContext } from "../../interfaces.js";
 
 interface CreateTweetPayload {
   content: string;
@@ -25,4 +25,21 @@ const mutations = {
     return tweet;
   },
 };
-export const resolvers = { mutations };
+const queries = {
+  getAllTweets: async () => {
+    return await prismaClient.tweet.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+  },
+};
+
+const extraResolvers = {
+  Tweet: {
+    author: async (parent: any) => {
+      return await prismaClient.user.findUnique({
+        where: { id: parent.authorId },
+      });
+    },
+  },
+};
+export const resolvers = { mutations, extraResolvers, queries };

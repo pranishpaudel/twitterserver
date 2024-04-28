@@ -60,4 +60,16 @@ const queries = {
   },
 };
 
-export const resolvers = { queries };
+const extraResolvers = {
+  User: {
+    tweets: async (parent: any) => {
+      console.log("I AM THE PARTENT", parent);
+      return await prismaClient.tweet.findMany({
+        where: {
+          authorId: parent.id,
+        },
+      });
+    },
+  },
+};
+export const resolvers = { queries, extraResolvers };
